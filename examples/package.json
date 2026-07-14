@@ -1,0 +1,16 @@
+{
+	"name": "electron-ass-example",
+	"dependencies": {
+		"electron-ass": "link:.."
+	},
+	"devDependencies": {
+		"vite": "^5.0.0",
+		"electron": "^42.3.2",
+		"vite-plugin-electron": "^0.29.1"
+	},
+	"main": "out/main.js",
+	"scripts": {
+		"dev": "pnpm vite",
+		"build": "pnpm vite build"
+	}
+}

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'" />
+		<title></title>
+		<style>
+			:root {
+				--fallback-title-bar-height: 40px;
+			}
+
+			html,
+			body,
+			#app {
+				height: 100%;
+				width: 100%;
+				margin: 0;
+			}
+
+			.title-bar {
+				position: absolute;
+				top: 0;
+				left: env(titlebar-area-x, 0);
+				height: env(titlebar-area-height, var(--fallback-title-bar-height));
+				width: 100%;
+				background-color: #22212b;
+				user-select: none;
+				-webkit-app-region: drag;
+				display: flex;
+				align-items: center;
+				padding-left: 10px;
+				color: white;
+			}
+
+			#app-content {
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: env(titlebar-area-height, var(--fallback-title-bar-height));
+				overflow: auto;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				gap: 1em;
+			}
+
+			#resizeBtn {
+				width: 4em;
+				height: 2em;
+				background-color: white;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+
+	<body style="overflow: hidden">
+		<div style="height: 100%" id="app">
+			<div class="title-bar">
+				<span class="title"></span>
+			</div>
+			<div id="app-content">
+				<span class="content"></span>
+				<button id="resizeBtn">Resize</button>
+			</div>
+		</div>
+		<script type="module" src="./main.js"></script>
+	</body>
+</html>

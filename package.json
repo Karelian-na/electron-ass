@@ -1,0 +1,123 @@
+{
+	"name": "electron-ass",
+	"version": "0.1.0",
+	"description": "A library for easy use of Electron in TypeScript.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./dist/main/ElectronApp.js",
+	"types": "./dist/types/main/ElectronApp.d.ts",
+	"scripts": {
+		"build-example": "chcp 65001 && cd examples && pnpm dev",
+		"build-common": "tsc -p ./src/common/tsconfig.json",
+		"build-main": "tsc -p ./src/main/tsconfig.json",
+		"build": "pnpm build-common && pnpm build-main",
+		"prepack": "pnpm build",
+		"pack:node": "npm pack",
+		"pack:node:dry": "npm pack --dry-run",
+		"publish:node": "npm publish --access public"
+	},
+	"dependencies": {
+		"reflect-metadata": "^0.2.2"
+	},
+	"peerDependencies": {
+		"electron": "^22.3.21"
+	},
+	"devDependencies": {
+		"vite": "^8.0.0",
+		"electron": "^22.3.21",
+		"typescript": "^5.9.3"
+	},
+	"files": [
+		"dist/**/*",
+		"LICENSE",
+		"README.md",
+		"package.json"
+	],
+	"homepage": "https://github.com/karelian-na/electron-ass#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/karelian-na/electron-ass.git"
+	},
+	"bugs": {
+		"url": "https://github.com/karelian-na/electron-ass/issues"
+	},
+	"keywords": [
+		"electron",
+		"typescript",
+		"ipc",
+		"preload",
+		"decorators",
+		"dependency-injection",
+		"vite"
+	],
+	"exports": {
+		"./common/decorators": {
+			"types": "./dist/types/common/decorators/index.d.ts",
+			"import": "./dist/common/decorators/index.js",
+			"default": "./dist/common/decorators/index.js"
+		},
+		"./common/interfaces": {
+			"types": "./dist/types/common/interfaces/index.d.ts",
+			"import": "./dist/common/interfaces/index.js",
+			"default": "./dist/common/interfaces/index.js"
+		},
+		"./common/services": {
+			"types": "./dist/types/common/services/index.d.ts",
+			"import": "./dist/common/services/index.js",
+			"default": "./dist/common/services/index.js"
+		},
+		"./common/utils": {
+			"types": "./dist/types/common/utils/index.d.ts",
+			"import": "./dist/common/utils/index.js",
+			"default": "./dist/common/utils/index.js"
+		},
+		"./common/*": {
+			"types": "./dist/types/common/*.d.ts",
+			"import": "./dist/common/*.js",
+			"default": "./dist/common/*.js"
+		},
+		"./main/decorators": {
+			"types": "./dist/types/main/decorators/index.d.ts",
+			"import": "./dist/main/decorators/index.js",
+			"default": "./dist/main/decorators/index.js"
+		},
+		"./main/services": {
+			"types": "./dist/types/main/services/index.d.ts",
+			"import": "./dist/main/services/index.js",
+			"default": "./dist/main/services/index.js"
+		},
+		"./main/*": {
+			"types": "./dist/types/main/*.d.ts",
+			"import": "./dist/main/*.js",
+			"default": "./dist/main/*.js"
+		}
+	},
+	"typesVersions": {
+		"*": {
+			"common/decorators": [
+				"dist/types/common/decorators/index.d.ts"
+			],
+			"common/interfaces": [
+				"dist/types/common/interfaces/index.d.ts"
+			],
+			"common/services": [
+				"dist/types/common/services/index.d.ts"
+			],
+			"common/utils": [
+				"dist/types/common/utils/index.d.ts"
+			],
+			"common/*": [
+				"dist/types/common/*"
+			],
+			"main/decorators": [
+				"dist/types/main/decorators/index.d.ts"
+			],
+			"main/services": [
+				"dist/types/main/services/index.d.ts"
+			],
+			"main/*": [
+				"dist/types/main/*"
+			]
+		}
+	}
+}

@@ -1,0 +1,57 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "typescript",
+			"tsconfig": "src/common/tsconfig.json",
+			"option": "watch",
+			"problemMatcher": [
+				"$tsc-watch"
+			],
+			"group": "build",
+			"label": "Watch electron-ass common"
+		},
+		{
+			"type": "typescript",
+			"tsconfig": "src/main/tsconfig.json",
+			"option": "watch",
+			"problemMatcher": [
+				"$tsc-watch"
+			],
+			"group": "build",
+			"label": "Watch electron-ass main"
+		},
+		{
+			"type": "npm",
+			"script": "build-example",
+			"label": "Build example and start",
+			"isBackground": true,
+			"dependsOn": [
+				"Watch electron-ass common",
+				"Watch electron-ass main"
+			],
+			"options": {
+				"env": {
+					"mode": "developement",
+					"ELECTRON_GET_USE_PROXY": "true",
+					"ELECTRON_MAIN_DEBUG_PORT": "9229"
+				}
+			},
+			"problemMatcher": {
+				"owner": "custom",
+				"fileLocation": [
+					"relative",
+					"${workspaceFolder}"
+				],
+				"pattern": {
+					"regexp": "^(?!x)x$"
+				},
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": ".*",
+					"endsPattern": ".*Debugger listening on .*:9229/.*"
+				}
+			}
+		}
+	],
+}

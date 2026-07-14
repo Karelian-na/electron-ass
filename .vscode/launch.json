@@ -1,0 +1,68 @@
+{
+	"configurations": [
+		{
+			"name": "Attach to electron example Main",
+			"request": "attach",
+			"type": "node",
+			"port": 9229,
+			"timeout": 10000,
+			"continueOnAttach": true,
+			"sourceMaps": true,
+			"smartStep": false,
+			"presentation": {
+				"hidden": false,
+				"group": "Attach to electron example",
+				"order": 1
+			}
+		},
+		{
+			"name": "Attach to electron example renderer",
+			"port": 9333,
+			"request": "attach",
+			"type": "chrome",
+			"timeout": 10000,
+			"webRoot": "${workspaceFolder}",
+			"presentation": {
+				"hidden": false,
+				"group": "Attach to electron example",
+				"order": 1
+			}
+		},
+		{
+			"command": "pnpm build-example",
+			"name": "Build example and start",
+			"request": "launch",
+			"type": "node-terminal",
+			"presentation": {
+				"hidden": true,
+				"group": "",
+				"order": 1
+			},
+			"env": {
+				"mode": "developement",
+				"ELECTRON_GET_USE_PROXY": "true",
+				"ELECTRON_MAIN_DEBUG_PORT": "9229"
+			}
+		}
+	],
+	"compounds": [
+		{
+			"name": "Launch electron example",
+			"preLaunchTask": "Build example and start",
+			"stopAll": true,
+			"configurations": [
+				"Attach to electron example Main",
+				"Attach to electron example renderer",
+			]
+		},
+		{
+			"name": "Launch electron example (Build debug)",
+			"stopAll": true,
+			"configurations": [
+				"Build example and start",
+				"Attach to electron example Main",
+				"Attach to electron example renderer",
+			]
+		}
+	]
+}

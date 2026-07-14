@@ -1,0 +1,14 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": ".",
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"outDir": "../../dist/common",
+		"declarationDir": "../../dist/types/common",
+		"declarationMap": true
+	},
+	"include": [
+		"./**/*"
+	]
+}
