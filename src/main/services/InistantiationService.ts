@@ -94,19 +94,7 @@ export class InstantiationService implements IInstantiationService {
 				continue;
 			}
 
-			const depService = this._createInstance(dep.name);
-			for (const [service, delays] of this._delayServicesMap) {
-				const idx = delays.findIndex((name) => name === dep.name);
-				if (-1 !== idx) {
-					(service as any)[dep.id] = depService;
-					delays.splice(idx, 1);
-					if (!delays.length) {
-						this._delayServicesMap.delete(service);
-					}
-					continue;
-				}
-			}
-
+			this._createInstance(dep.name);
 			let handlers: Optional<Array<DelayServiceCreatedHandler>>;
 			if ((handlers = this._delayServiceCreatedHandler.get(dep.name))) {
 				handlers.forEach((handler) => handler());
@@ -122,6 +110,23 @@ export class InstantiationService implements IInstantiationService {
 		this._services.set(srvName, instance);
 		this.logService.info(`InstantiationService::createInstance: Successfully create instance of ${srvName}!`);
 
+		// Update delay services with the newly created instance
+		for (const [service, delays] of this._delayServicesMap) {
+			const idx = delays.findIndex((name) => name === srvName);
+			if (-1 === idx) {
+				continue;
+			}
+
+			const dependencies = ServiceProvider.getServiceDependencies((service as any).constructor);
+			const dep = dependencies.find((item) => item.name === srvName)!;
+			(service as any)[dep.id] = instance;
+			delays.splice(idx, 1);
+			if (!delays.length) {
+				this._delayServicesMap.delete(service);
+			}
+		}
+
+		// Call post-construct methods
 		const postConstructMethods = Reflect.getMetadata("postConstructMetadataKey", decoratedSrvCtor);
 		postConstructMethods?.forEach((method) => method.call(instance));
 
