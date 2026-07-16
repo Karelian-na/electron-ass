@@ -1,9 +1,10 @@
 {
 	"name": "electron-ass",
-	"version": "0.1.0",
-	"description": "A library for easy use of Electron in TypeScript.",
+	"version": "0.1.1",
+	"description": "A TypeScript decorator and service-injection helper library for Electron main process, preload APIs, and IPC channel wiring.",
 	"license": "MIT",
 	"type": "module",
+	"author": "Karelian_na",
 	"main": "./dist/main/ElectronApp.js",
 	"types": "./dist/types/main/ElectronApp.d.ts",
 	"scripts": {
