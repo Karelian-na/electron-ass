@@ -5,10 +5,11 @@ import type { IService } from "./ServiceProvider";
 import type { Nullable } from "../../common/utils";
 import type { IEventService } from "./EventService";
 import type { BrowserWindowConstructorOptions, OpenDialogOptions } from "electron";
-import type { ICommonWindowManageService, ISize, IResizeOptions } from "../../common/services/IWindowManageService";
+import type { ICommonWindowManageService, ISize, IResizeOptions, WinIpcEventsMap } from "../../common/services/IWindowManageService";
 
 import { app } from "electron/main";
 import { IpcEvents } from "../../common/events";
+import { EventEmitter } from "../../common/services";
 import { Animation } from "../../common/utils/Animate";
 import { BrowserWindow, shell, dialog } from "electron";
 import { WindowManageServiceDomain } from "../../common/services/IWindowManageService";
@@ -22,9 +23,16 @@ import {
 	AutoTransferListenChannel,
 } from "../decorators";
 
+export type WinEventsMap = {
+	onWindowCreate(win: BrowserWindow, isMain: boolean): void;
+};
+
 @Service
 @ChannelHandlerProvider(WindowManageServiceDomain)
-export class WindowManageService implements IWindowManageService {
+export class WindowManageService<IPCEM extends WinIpcEventsMap = WinIpcEventsMap, IEM extends WinEventsMap = WinEventsMap>
+	extends EventEmitter<IPCEM, IEM>
+	implements IWindowManageService<IPCEM, IEM>
+{
 	private _windows: Map<string, BrowserWindow>;
 	private _mainWindow: Nullable<BrowserWindow>;
 
@@ -34,13 +42,81 @@ export class WindowManageService implements IWindowManageService {
 	protected readonly eventService!: IEventService;
 
 	constructor() {
+		super();
 		this._windows = new Map();
 		this._mainWindow = null;
 	}
 
-	protected async _createMainWindow() {
-		const win = await this.createWindow("");
-		win.loadURL("http://www.electronjs.org");
+	private _isLocalFilePath(url: string) {
+		if (!url) {
+			return false;
+		}
+
+		if (url.startsWith("file://")) {
+			return true;
+		}
+
+		if (/^(https?:)?\/\//i.test(url)) {
+			return false;
+		}
+
+		if (/^[a-zA-Z][a-zA-Z\d+.-]*:/i.test(url)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	protected async _createWindow(isMain: boolean, url: string, options: BrowserWindowConstructorOptions) {
+		if (isMain && this._mainWindow) {
+			return this._mainWindow;
+		}
+
+		if (!app.isReady()) {
+			await app.whenReady();
+		}
+
+		this.logService.info(`WindowManageService::createWindow: With url: ${url}, preload: ${options.webPreferences?.preload}`);
+		const win = new BrowserWindow(options);
+
+		win.on("close", async (_) => {
+			_.preventDefault();
+			const res = await this.eventService.invokeIpcEvent(win.webContents, IpcEvents.windowBeforeClose);
+			if (!res || res.length === 0 || res.every((val) => val)) {
+				this._close(win);
+			}
+		});
+		win.on("focus", () => {
+			this.eventService.sendIpcEvent(win.webContents, IpcEvents.windowFocus);
+		});
+		win.on("blur", () => {
+			this.eventService.sendIpcEvent(win.webContents, IpcEvents.windowBlur);
+		});
+
+		win.webContents
+			.on("did-start-loading", () => {
+				this.logService.info(`WindowManageService::createWindow: Started loading ${url}`);
+			})
+			.on("preload-error", (event, preloadPath, error) => {
+				this.logService.error(`WindowManageService::createWindow: Preload error in ${preloadPath}: ${error}`);
+			})
+			.on("did-finish-load", () => {
+				this.logService.info(`WindowManageService::createWindow: Finished loading ${url}`);
+			});
+
+		this._windows.set(url, win);
+		if (isMain) {
+			this._mainWindow = win;
+		}
+
+		(this as EventEmitter<WinIpcEventsMap, WinEventsMap>).sendEvent("onWindowCreate", win, isMain);
+
+		if (this._isLocalFilePath(url)) {
+			win.loadFile(url);
+		} else {
+			win.loadURL(url);
+		}
+
 		return win;
 	}
 
@@ -154,49 +230,11 @@ export class WindowManageService implements IWindowManageService {
 	}
 
 	async createWindow(url: string, options: BrowserWindowConstructorOptions = {}) {
-		if (!app.isReady()) {
-			await app.whenReady();
-		}
-
-		this.logService.info(`WindowManageService::createWindow: With url: ${url}, preload: ${options.webPreferences?.preload}`);
-		const win = new BrowserWindow(options);
-		this._windows.set(url, win);
-
-		win.on("close", async (_) => {
-			_.preventDefault();
-			const res = await this.eventService.invokeIpcEvent(win.webContents, IpcEvents.windowBeforeClose);
-			if (!res || res.length === 0 || res.every((val) => val)) {
-				this._close(win);
-			}
-		});
-		win.on("focus", () => {
-			this.eventService.sendIpcEvent(win.webContents, IpcEvents.windowFocus);
-		});
-		win.on("blur", () => {
-			this.eventService.sendIpcEvent(win.webContents, IpcEvents.windowBlur);
-		});
-
-		win.webContents
-			.on("did-start-loading", () => {
-				this.logService.info(`WindowManageService::createWindow: Started loading ${url}`);
-			})
-			.on("preload-error", (event, preloadPath, error) => {
-				this.logService.error(`WindowManageService::createWindow: Preload error in ${preloadPath}: ${error}`);
-			})
-			.on("did-finish-load", () => {
-				this.logService.info(`WindowManageService::createWindow: Finished loading ${url}`);
-			});
-
-		return win;
+		return this._createWindow(false, url, options);
 	}
 
 	async createMainWindow() {
-		if (this._mainWindow) {
-			return this._mainWindow;
-		}
-
-		this._mainWindow = await this._createMainWindow();
-		return this._mainWindow;
+		return this._createWindow(true, "", {});
 	}
 
 	getMainWindow() {
@@ -220,7 +258,8 @@ export class WindowManageService implements IWindowManageService {
 	}
 }
 
-export interface IWindowManageService extends ICommonWindowManageService, IService {
+export interface IWindowManageService<IPCEM extends WinIpcEventsMap = WinIpcEventsMap, IEM extends WinEventsMap = WinEventsMap>
+	extends ICommonWindowManageService<IPCEM, IEM>, IService {
 	/**
 	 * Create a new window with the specified URL and options.
 	 *

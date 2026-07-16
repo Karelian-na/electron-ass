@@ -1,7 +1,6 @@
 /** @format */
 
 import type { OpenDialogOptions } from "electron";
-import type { ICommonEventService } from "../../common/services/IEventService";
 import type { ICommonWindowManageService, IResizeOptions, ISize, WinIpcEventsMap } from "../services/IWindowManageService";
 
 /**
@@ -9,9 +8,9 @@ import type { ICommonWindowManageService, IResizeOptions, ISize, WinIpcEventsMap
  *
  * @author Karelian_na
  * @date 2026/05/22
+ * @template IPCEM IPC events map, default is {@link WinIpcEventsMap}
  */
-export interface IWindowAPI<WIPCEM extends WinIpcEventsMap = WinIpcEventsMap>
-	extends ICommonWindowManageService, ICommonEventService<WIPCEM> {
+export interface IWindowAPI<IPCEM extends WinIpcEventsMap = WinIpcEventsMap> extends ICommonWindowManageService<IPCEM, {}> {
 	/**
 	 * Close the current window.
 	 *

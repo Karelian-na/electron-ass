@@ -8,36 +8,18 @@ import path from "path";
 
 @Service
 export class WindowManageService extends BWMS implements IWindowManageService {
-	getValidPageUrl(addr: string): string {
-		let url = "";
-		if (process.env["VITE_DEV_SERVER_URL"]) {
-			url = process.env["VITE_DEV_SERVER_URL"] + addr;
-		} else {
-			url = path.resolve(__dirname, addr);
-		}
-		return url;
-	}
-
 	private _getLocalPathFromOutputDir(...paths: string[]) {
 		return path.resolve(app.getAppPath(), "out", ...paths);
 	}
 
-	protected override async _createMainWindow() {
-		return this.createWindow(this.getValidPageUrl("views/index.html"), {
-			webPreferences: {
-				preload: this._getLocalPathFromOutputDir("preload.js"),
-				nodeIntegration: true,
-			},
-		});
-	}
-
-	override async createWindow(url: string, option: BrowserWindowConstructorOptions = {}) {
+	protected override async _createWindow(isMain: boolean, url: string, option: BrowserWindowConstructorOptions = {}) {
 		if (!app.isReady()) {
 			await app.whenReady();
 		}
 
 		const dpi = screen.getPrimaryDisplay().scaleFactor;
-		const win = await super.createWindow(
+		const win = await super._createWindow(
+			isMain,
 			url,
 			Object.assign(
 				{
@@ -71,13 +53,27 @@ export class WindowManageService extends BWMS implements IWindowManageService {
 				this.logService.error(`WindowManageService::createWindow: Failed to load url: ${url}, reason: ${err}(${code})`);
 			});
 
-		if (url.startsWith("http")) {
-			win.loadURL(url);
-		} else {
-			win.loadFile(url);
-		}
-
 		return win;
+	}
+
+	getValidPageUrl(addr: string): string {
+		let url = "";
+		if (process.env["VITE_DEV_SERVER_URL"]) {
+			url = process.env["VITE_DEV_SERVER_URL"] + addr;
+		} else {
+			url = path.resolve(__dirname, addr);
+		}
+		return url;
+	}
+
+	override async createMainWindow() {
+		const url = this.getValidPageUrl("views/index.html");
+		return this.createWindow(url, {
+			webPreferences: {
+				preload: this._getLocalPathFromOutputDir("preload.js"),
+				nodeIntegration: true,
+			},
+		});
 	}
 }
 
@@ -86,7 +82,7 @@ export interface IWindowManageService extends IBWMS {
 	 * Get the valid page url according to the current environment, it will return the dev server url in development and the file path in production.
 	 *
 	 * @author Karelian_na
-	 * @date 2026/03/16 19:15:43
+	 * @date 2026/03/16
 	 * @param addr - The page address, it can be a relative path or an absolute url.
 	 */
 	getValidPageUrl(addr: string): string;
