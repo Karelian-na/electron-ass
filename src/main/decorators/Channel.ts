@@ -48,9 +48,14 @@ export function ChannelHandlerProvider(domain: string) {
 				const eventService = AppEntry.getInstance().getInstantiationService().getAndCreateServiceInstance(EventService)!;
 
 				const metadata = Reflect.getMetadata("channelHandlerMetadataKey", constructor.prototype)!;
+				const handlers = new Map<string, { channel: string; info: IChannelHandlerInfo }>();
 				metadata.handlers?.forEach((info) => {
 					const channel = info.channel.includes("::") ? info.channel : `${metadata.domain}::${info.channel}`;
+					// A decorated override replaces the inherited handler for the same IPC channel.
+					handlers.set(`${info.type}:${channel}`, { channel, info });
+				});
 
+				handlers.forEach(({ channel, info }) => {
 					const fn = info.handler.bind(this);
 					fn.toString = () => info.handler.toString();
 					if (info.type === "listen") {
