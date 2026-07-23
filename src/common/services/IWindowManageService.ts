@@ -3,7 +3,7 @@
 import type { IpcEvents } from "../events";
 import type { Optional, Promisable } from "../utils";
 import type { ICommonEventService, IEventsMap } from "./IEventService";
-import type { SaveDialogOptions, OpenExternalOptions, MessageBoxOptions, OpenDialogOptions } from "electron";
+import type { SaveDialogOptions, OpenExternalOptions, MessageBoxOptions, MessageBoxReturnValue, OpenDialogOptions } from "electron";
 
 export interface ISize {
 	width: number;
@@ -73,13 +73,13 @@ export interface ICommonWindowManageService<IPCEM extends IEventsMap, IEM extend
 	showSaveDialog(options: SaveDialogOptions): Promise<Optional<string>>;
 
 	/**
-	 * Shows a synchronous native message box.
+	 * Shows an asynchronous native message box.
 	 *
 	 * @author Karelian_na
 	 * @date 2026/07/23
-	 * @returns The index of the selected button.
+	 * @returns The selected button index and optional checkbox state.
 	 */
-	showMessageBox(options: MessageBoxOptions): number;
+	showMessageBox(options: MessageBoxOptions): Promise<MessageBoxReturnValue>;
 }
 
 /**

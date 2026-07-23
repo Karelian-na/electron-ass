@@ -5,7 +5,7 @@ import type { IAppService } from "./AppService";
 import type { IService } from "./ServiceProvider";
 import type { IEventService } from "./EventService";
 import type { Nullable, Optional } from "../../common/utils";
-import type { SaveDialogOptions, MessageBoxOptions } from "electron/main";
+import type { SaveDialogOptions, MessageBoxOptions, MessageBoxReturnValue } from "electron/main";
 import type { BrowserWindowConstructorOptions, OpenDialogOptions } from "electron";
 import type { ICommonWindowManageService, ISize, IResizeOptions, WinIpcEventsMap } from "../../common/services/IWindowManageService";
 
@@ -170,33 +170,26 @@ export class WindowManageService<IPCEM extends WinIpcEventsMap = WinIpcEventsMap
 		return result.canceled ? undefined : result.filePath;
 	}
 
-	@ListenChannel(true)
-	showMessageBox(eventOrOptions?: Electron.IpcMainEvent | MessageBoxOptions, options?: MessageBoxOptions): number {
-		if (!eventOrOptions || !("sender" in eventOrOptions)) {
-			const win = this.getMainWindow();
-			return win
-				? dialog.showMessageBoxSync(win, eventOrOptions as MessageBoxOptions)
-				: dialog.showMessageBoxSync(eventOrOptions as MessageBoxOptions);
+	@HandleChannel(true)
+	async showMessageBox(
+		eventOrOptions: Electron.IpcMainInvokeEvent | MessageBoxOptions,
+		options?: MessageBoxOptions,
+	): Promise<MessageBoxReturnValue> {
+		const event = "sender" in eventOrOptions ? eventOrOptions : undefined;
+		const dialogOptions = options ?? (eventOrOptions as MessageBoxOptions);
+		dialogOptions.noLink = true;
+		if (!dialogOptions.title) {
+			dialogOptions.title = this.appService.getName();
+		}
+		if (dialogOptions.cancelId === undefined) {
+			dialogOptions.cancelId = -1;
+		}
+		if (!dialogOptions.type) {
+			dialogOptions.type = "question";
 		}
 
-		if (!options) {
-			throw new Error("Options must be provided!");
-		}
-		const event = eventOrOptions as Electron.IpcMainEvent;
-
-		options.noLink = true;
-		if (!options.title) {
-			options.title = this.appService.getName();
-		}
-		if (options.cancelId === undefined) {
-			options.cancelId = -1;
-		}
-		if (!options.type) {
-			options.type = "question";
-		}
-
-		const win = BrowserWindow.fromWebContents(event.sender) ?? this.getMainWindow();
-		return win ? dialog.showMessageBoxSync(win, options) : dialog.showMessageBoxSync(options);
+		const win = event ? (BrowserWindow.fromWebContents(event.sender) ?? this.getMainWindow()) : this.getMainWindow();
+		return win ? dialog.showMessageBox(win, dialogOptions) : dialog.showMessageBox(dialogOptions);
 	}
 
 	@ListenChannel(true)
