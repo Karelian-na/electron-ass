@@ -1,6 +1,5 @@
 /** @format */
 
-import type { OpenDialogOptions } from "electron";
 import type { ICommonWindowManageService, IResizeOptions, ISize, WinIpcEventsMap } from "../services/IWindowManageService";
 
 /**
@@ -27,16 +26,6 @@ export interface IWindowAPI<IPCEM extends WinIpcEventsMap = WinIpcEventsMap> ext
 	 * @param {boolean} [value] true to sticky the window, false to cancel it
 	 */
 	sticky(value: boolean): void;
-
-	/**
-	 * Show a modal dialog for the current window.
-	 *
-	 * @author Karelian_na
-	 * @date 2023/08/05
-	 * @param {OpenDialogOptions} options options for the dialog
-	 * @returns {*}  {Promise<Array<string>>} promise of a string array that the user selected
-	 */
-	showOpenDialog(options: OpenDialogOptions): Promise<Array<string>>;
 
 	/**
 	 * Resize the window.

@@ -1,9 +1,11 @@
 /** @format */
 
 import type { ILogService } from "./LogService";
+import type { IAppService } from "./AppService";
 import type { IService } from "./ServiceProvider";
-import type { Nullable } from "../../common/utils";
 import type { IEventService } from "./EventService";
+import type { Nullable, Optional } from "../../common/utils";
+import type { SaveDialogOptions, MessageBoxOptions } from "electron/main";
 import type { BrowserWindowConstructorOptions, OpenDialogOptions } from "electron";
 import type { ICommonWindowManageService, ISize, IResizeOptions, WinIpcEventsMap } from "../../common/services/IWindowManageService";
 
@@ -38,6 +40,8 @@ export class WindowManageService<IPCEM extends WinIpcEventsMap = WinIpcEventsMap
 
 	@Autowired
 	protected readonly logService!: ILogService;
+	@Autowired
+	protected readonly appService!: IAppService;
 	@Autowired
 	protected readonly eventService!: IEventService;
 
@@ -147,9 +151,52 @@ export class WindowManageService<IPCEM extends WinIpcEventsMap = WinIpcEventsMap
 	}
 
 	@HandleChannel(true)
-	showOpenDialog(event: Electron.IpcMainEvent, options: OpenDialogOptions) {
-		const win = BrowserWindow.fromWebContents(event.sender)!;
-		return dialog.showOpenDialogSync(win, options);
+	async showOpenDialog(eventOrOptions: Electron.IpcMainInvokeEvent | OpenDialogOptions, options?: OpenDialogOptions) {
+		const event = "sender" in eventOrOptions ? eventOrOptions : undefined;
+		const dialogOptions = options ?? (eventOrOptions as OpenDialogOptions);
+		const win = event ? (BrowserWindow.fromWebContents(event.sender) ?? this.getMainWindow()) : this.getMainWindow();
+		return win ? dialog.showOpenDialogSync(win, dialogOptions) : dialog.showOpenDialogSync(dialogOptions);
+	}
+
+	@HandleChannel(true)
+	async showSaveDialog(
+		eventOrOptions: Electron.IpcMainInvokeEvent | SaveDialogOptions,
+		options?: SaveDialogOptions,
+	): Promise<Optional<string>> {
+		const event = "sender" in eventOrOptions ? eventOrOptions : undefined;
+		const dialogOptions = options ?? (eventOrOptions as SaveDialogOptions);
+		const win = event ? (BrowserWindow.fromWebContents(event.sender) ?? this.getMainWindow()) : this.getMainWindow();
+		const result = win ? await dialog.showSaveDialog(win, dialogOptions) : await dialog.showSaveDialog(dialogOptions);
+		return result.canceled ? undefined : result.filePath;
+	}
+
+	@ListenChannel(true)
+	showMessageBox(eventOrOptions?: Electron.IpcMainEvent | MessageBoxOptions, options?: MessageBoxOptions): number {
+		if (!eventOrOptions || !("sender" in eventOrOptions)) {
+			const win = this.getMainWindow();
+			return win
+				? dialog.showMessageBoxSync(win, eventOrOptions as MessageBoxOptions)
+				: dialog.showMessageBoxSync(eventOrOptions as MessageBoxOptions);
+		}
+
+		if (!options) {
+			throw new Error("Options must be provided!");
+		}
+		const event = eventOrOptions as Electron.IpcMainEvent;
+
+		options.noLink = true;
+		if (!options.title) {
+			options.title = this.appService.getName();
+		}
+		if (options.cancelId === undefined) {
+			options.cancelId = -1;
+		}
+		if (!options.type) {
+			options.type = "question";
+		}
+
+		const win = BrowserWindow.fromWebContents(event.sender) ?? this.getMainWindow();
+		return win ? dialog.showMessageBoxSync(win, options) : dialog.showMessageBoxSync(options);
 	}
 
 	@ListenChannel(true)

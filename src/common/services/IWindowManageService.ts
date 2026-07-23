@@ -1,9 +1,9 @@
 /** @format */
 
 import type { IpcEvents } from "../events";
-import type { Promisable } from "../utils";
-import type { BrowserWindow, OpenExternalOptions } from "electron";
+import type { Optional, Promisable } from "../utils";
 import type { ICommonEventService, IEventsMap } from "./IEventService";
+import type { SaveDialogOptions, OpenExternalOptions, MessageBoxOptions, OpenDialogOptions } from "electron";
 
 export interface ISize {
 	width: number;
@@ -51,6 +51,35 @@ export interface ICommonWindowManageService<IPCEM extends IEventsMap, IEM extend
 	 * @param {string} url the URL to open
 	 */
 	openExternal(url: string, options?: OpenExternalOptions): void;
+
+	/**
+	 * Show a modal dialog for the current window.
+	 *
+	 * @author Karelian_na
+	 * @date 2026/07/23
+	 * @param {OpenDialogOptions} options options for the dialog
+	 * @returns promise of a string array that the user selected
+	 */
+	showOpenDialog(options: OpenDialogOptions): Promise<Optional<Array<string>>>;
+
+	/**
+	 * Shows the native save-file dialog.
+	 *
+	 * @author Karelian_na
+	 * @date 2026/07/23
+	 * @param {SaveDialogOptions} options The save dialog options
+	 * @returns The selected file path, or undefined when the dialog is cancelled.
+	 */
+	showSaveDialog(options: SaveDialogOptions): Promise<Optional<string>>;
+
+	/**
+	 * Shows a synchronous native message box.
+	 *
+	 * @author Karelian_na
+	 * @date 2026/07/23
+	 * @returns The index of the selected button.
+	 */
+	showMessageBox(options: MessageBoxOptions): number;
 }
 
 /**

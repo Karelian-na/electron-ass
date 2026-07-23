@@ -36,6 +36,12 @@ export class WindowAPI extends EventEmitter<WinIpcEventsMap> implements IWindowA
 	@AutoTransfer(EventEmitter.invokeWithError)
 	showOpenDialog!: IWindowAPI["showOpenDialog"];
 
+	@AutoTransfer(EventEmitter.invokeWithError)
+	showSaveDialog!: IWindowAPI["showSaveDialog"];
+
+	@AutoTransfer(EventEmitter.invokeWithError)
+	showMessageBox!: IWindowAPI["showMessageBox"];
+
 	@AutoTransfer(EventEmitter.send)
 	sticky!: IWindowAPI["sticky"];
 
