@@ -4,7 +4,7 @@ import type { IEventsMap } from "../../common/services";
 import type { IApplicationAPI } from "../../common/interfaces/IApplicationAPI";
 
 import { EventEmitter } from "./common";
-import { AutoTransfer } from "../decorators/AutoTransfer";
+import { AutoTransfer } from "../decorators/renderer";
 import { AppServiceDomain } from "../../common/services/IAppService";
 
 @AutoTransfer(AppServiceDomain)

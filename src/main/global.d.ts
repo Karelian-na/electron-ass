@@ -1,7 +1,8 @@
 /** @format */
 
 import type { Optional } from "../common/utils";
-import type { IServiceMetadataInfo, IChannelHandlerMetadata, IAutoTransferredClassMetadata } from "./decorators";
+import type { IAutoTransferredClassMetadata } from "./decorators/renderer";
+import type { IServiceMetadataInfo, IChannelHandlerMetadata } from "./decorators";
 
 declare global {
 	namespace Reflect {

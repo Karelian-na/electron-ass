@@ -82,6 +82,11 @@
 			"import": "./dist/main/decorators/index.js",
 			"default": "./dist/main/decorators/index.js"
 		},
+		"./main/decorators/renderer": {
+			"types": "./dist/types/main/decorators/renderer/index.d.ts",
+			"import": "./dist/main/decorators/renderer/index.js",
+			"default": "./dist/main/decorators/renderer/index.js"
+		},
 		"./main/services": {
 			"types": "./dist/types/main/services/index.d.ts",
 			"import": "./dist/main/services/index.js",
@@ -112,6 +117,9 @@
 			],
 			"main/decorators": [
 				"dist/types/main/decorators/index.d.ts"
+			],
+			"main/decorators/renderer": [
+				"dist/types/main/decorators/renderer/index.d.ts"
 			],
 			"main/services": [
 				"dist/types/main/services/index.d.ts"

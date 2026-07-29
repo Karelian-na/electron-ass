@@ -3,5 +3,4 @@ export * from "./Channel";
 export * from "./PostConstruct";
 export * from "./DelayLoad";
 export * from "./Service";
-export * from "./AutoTransfer";
 export * from "./ElectronApplication";

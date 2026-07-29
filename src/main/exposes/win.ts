@@ -3,7 +3,7 @@ import type { IResizeOptions, ISize, WinIpcEventsMap } from "../../common/servic
 
 import { EventEmitter } from "./common";
 import { IpcEvents } from "../../common/events";
-import { AutoTransfer } from "../decorators/AutoTransfer";
+import { AutoTransfer } from "../decorators/renderer";
 import { WindowManageServiceDomain } from "../../common/services/IWindowManageService";
 
 @AutoTransfer(WindowManageServiceDomain)
