@@ -17,6 +17,17 @@ export type IpcEventsMap = WinIpcEventsMap;
 export class IpcErrorResult {
 	private _structureCloneString: string;
 
+	public static isIpcError(obj: any): obj is IpcErrorResult {
+		if (typeof obj === "object" && obj !== null) {
+			const isError = (obj as IpcErrorResult)._structureCloneString !== undefined;
+			if(isError) {
+				Object.setPrototypeOf(obj, IpcErrorResult.prototype);
+			}
+			return isError;
+		}
+		return false;
+	}
+
 	constructor(error: any) {
 		if (error instanceof Error) {
 			const err = {

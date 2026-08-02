@@ -45,7 +45,7 @@ export class EventService<IPCEM extends IEventsMap = IpcEventsMap, IEM extends I
 		return new Promise((resolve, reject) => {
 			const timestamp = Date.now();
 			ipcMain.once(`${String(channel)}:${timestamp}`, (_, res: Array<any>) => {
-				if (res instanceof IpcErrorResult) {
+				if (IpcErrorResult.isIpcError(res)) {
 					reject(res.toError());
 					return;
 				}
