@@ -3,36 +3,25 @@
 	"tasks": [
 		{
 			"type": "typescript",
-			"tsconfig": "src/common/tsconfig.json",
+			"tsconfig": "tsconfig.json",
+			"label": "Build electron-ass in watch mode",
 			"option": "watch",
 			"problemMatcher": [
 				"$tsc-watch"
 			],
-			"group": "build",
-			"label": "Watch electron-ass common"
-		},
-		{
-			"type": "typescript",
-			"tsconfig": "src/main/tsconfig.json",
-			"option": "watch",
-			"problemMatcher": [
-				"$tsc-watch"
-			],
-			"group": "build",
-			"label": "Watch electron-ass main"
+			"group": "build"
 		},
 		{
 			"type": "npm",
-			"script": "build-example",
-			"label": "Build example and start",
+			"script": "dev-example",
+			"label": "Build and start example",
 			"isBackground": true,
 			"dependsOn": [
-				"Watch electron-ass common",
-				"Watch electron-ass main"
+				"Build electron-ass in watch mode"
 			],
 			"options": {
 				"env": {
-					"mode": "developement",
+					"mode": "development",
 					"ELECTRON_GET_USE_PROXY": "true",
 					"ELECTRON_MAIN_DEBUG_PORT": "9229"
 				}

@@ -1,6 +1,19 @@
 {
-	"extends": "../../tsconfig.json",
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"paths": {
+			"common": [
+				"../common"
+			],
+		},
+		"lib": [
+			"ESNext",
+			"DOM",
+			"DOM.Iterable",
+		],
+		"types": []
+	},
 	"include": [
-		"./**/*"
-	]
+		"./**/*",
+	],
 }

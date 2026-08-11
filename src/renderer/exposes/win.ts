@@ -2,8 +2,8 @@ import type { IWindowAPI } from "../../common/interfaces/IWindowAPI";
 import type { IResizeOptions, ISize, WinIpcEventsMap } from "../../common/services/IWindowManageService";
 
 import { EventEmitter } from "./common";
+import { AutoTransfer } from "../decorators";
 import { IpcEvents } from "../../common/events";
-import { AutoTransfer } from "../decorators/renderer";
 import { WindowManageServiceDomain } from "../../common/services/IWindowManageService";
 
 @AutoTransfer(WindowManageServiceDomain)

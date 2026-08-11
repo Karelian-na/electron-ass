@@ -1,14 +1,21 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"rootDir": "..",
-		"module": "esnext",
-		"moduleResolution": "bundler",
-		"outDir": "../../dist",
-		"declarationDir": "../../dist/types",
-		"declarationMap": true
+		"rootDir": ".",
+		"outDir": "../../dist/main",
+		"declarationDir": "../../dist/types/main",
+		"lib": [
+			"ESNext"
+		],
+		"skipLibCheck": true,
+		"composite": true,
 	},
 	"include": [
 		"./**/*"
+	],
+	"references": [
+		{
+			"path": "../common"
+		}
 	]
 }

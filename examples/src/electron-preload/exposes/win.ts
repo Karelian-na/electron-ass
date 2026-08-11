@@ -1,7 +1,7 @@
 /** @format */
 
-import { AutoTransfer } from "electron-ass/main/decorators/renderer";
-import { WindowAPI as BaseWindowAPI } from "electron-ass/main/exposes/win";
+import { AutoTransfer } from "electron-ass/renderer/decorators";
+import { WindowAPI as BaseWindowAPI } from "electron-ass/renderer/exposes/win";
 import { WindowManageServiceDomain } from "electron-ass/common/services/IWindowManageService";
 
 @AutoTransfer(WindowManageServiceDomain)

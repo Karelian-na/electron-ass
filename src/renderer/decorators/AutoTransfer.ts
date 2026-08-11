@@ -1,10 +1,10 @@
 /** @format */
 
-import type { Optional } from "../../../common/utils";
-import type { AccessorCallWithName } from "../../../common/decorators/AccessorCallWithName";
+import type { Optional } from "../../common/utils";
+import type { AccessorCallWithName } from "../../common/decorators/AccessorCallWithName";
 
-import { Clazz } from "../../utils/Clazz";
-import { EmptyObject } from "../../../common/utils/index";
+import { Clazz } from "../../common/utils/Clazz";
+import { EmptyObject } from "../../common/utils/index";
 
 import "reflect-metadata";
 

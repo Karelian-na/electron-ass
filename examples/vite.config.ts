@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 import path from "path";
 import electron from "vite-plugin-electron";
 
-const isDevelopmentMode = process.env["mode"] === "developement";
+const isDevelopmentMode = process.env["mode"] === "development";
 
 export default defineConfig({
 	resolve: {

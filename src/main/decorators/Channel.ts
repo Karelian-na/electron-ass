@@ -1,6 +1,6 @@
 /** @format */
 
-import type { Clazz } from "../utils/Clazz";
+import type { Clazz } from "../../common/utils/Clazz";
 
 import { AppEntry } from "../AppEntry";
 import { PostConstruct } from "./PostConstruct";

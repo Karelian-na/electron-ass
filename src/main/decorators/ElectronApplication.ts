@@ -1,7 +1,7 @@
 import type { ElectronApp } from "../ElectronApp";
 
 import { AppEntry } from "../AppEntry";
-import { Clazz } from "../utils/Clazz";
+import { Clazz } from "../../common/utils/Clazz";
 
 /**
  * mark a class as the startup class which inherit the base class {@link ElectronApp},

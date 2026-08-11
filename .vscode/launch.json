@@ -30,7 +30,7 @@
 		},
 		{
 			"command": "pnpm build-example",
-			"name": "Build example and start",
+			"name": "Build and start example (Build Debug)",
 			"request": "launch",
 			"type": "node-terminal",
 			"presentation": {
@@ -39,7 +39,7 @@
 				"order": 1
 			},
 			"env": {
-				"mode": "developement",
+				"mode": "development",
 				"ELECTRON_GET_USE_PROXY": "true",
 				"ELECTRON_MAIN_DEBUG_PORT": "9229"
 			}
@@ -48,7 +48,7 @@
 	"compounds": [
 		{
 			"name": "Launch electron example",
-			"preLaunchTask": "Build example and start",
+			"preLaunchTask": "Build and start example",
 			"stopAll": true,
 			"configurations": [
 				"Attach to electron example Main",
@@ -58,8 +58,9 @@
 		{
 			"name": "Launch electron example (Build debug)",
 			"stopAll": true,
+			"preLaunchTask": "Build electron-ass in watch mode",
 			"configurations": [
-				"Build example and start",
+				"Build and start example (Build Debug)",
 				"Attach to electron example Main",
 				"Attach to electron example renderer",
 			]

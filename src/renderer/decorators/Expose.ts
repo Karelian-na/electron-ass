@@ -1,5 +1,5 @@
 import { contextBridge } from "electron";
-import { Clazz } from "../../utils/Clazz";
+import { Clazz } from "../../common/utils/Clazz";
 
 /**
  * Expose a class instance's methods to the specify isolate world

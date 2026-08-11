@@ -1,0 +1,14 @@
+{
+	"references": [
+		{
+			"path": "./src/common",
+		},
+		{
+			"path": "./src/main"
+		},
+		{
+			"path": "./src/renderer"
+		},
+	],
+	"files": []
+}

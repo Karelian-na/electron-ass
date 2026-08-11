@@ -1,25 +1,6 @@
 {
-	"compilerOptions": {
-		"rootDir": "src",
-		"checkJs": true,
-		"noEmit": true,
-		"noEmitOnError": true,
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"strict": true,
-		"noImplicitAny": true,
-		"strictNullChecks": true,
-		"strictFunctionTypes": true,
-		"noImplicitThis": true,
-		"noImplicitReturns": true,
-		"noImplicitOverride": true,
-		"module": "esnext",
-		"moduleResolution": "bundler",
-		"experimentalDecorators": true,
-		"baseUrl": "src",
-		"removeComments": false,
-	},
+	"extends": "./tsconfig.base.json",
 	"include": [
-		"./src/common/**/*"
-	]
+		"./*.ts"
+	],
 }

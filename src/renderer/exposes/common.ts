@@ -3,8 +3,8 @@
 import type { EventHandler } from "../../common/services/IEventService";
 
 import { ipcRenderer } from "electron";
+import { AutoTransfer } from "../decorators";
 import { IpcEventsMap } from "../../common/events";
-import { AutoTransfer } from "../decorators/renderer";
 import { IpcChannelEvents, IpcErrorResult } from "../../common/events";
 import { EventEmitter as BaseEventEmitter } from "../../common/services/IEventService";
 

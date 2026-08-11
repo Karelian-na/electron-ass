@@ -1,6 +1,6 @@
 /** @format */
 
-import { Clazz } from "../utils/Clazz";
+import { Clazz } from "../../common/utils/Clazz";
 import { BiMap } from "../../common/utils/BiMap";
 
 export interface IService {}

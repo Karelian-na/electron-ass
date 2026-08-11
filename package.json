@@ -8,10 +8,9 @@
 	"main": "./dist/main/ElectronApp.js",
 	"types": "./dist/types/main/ElectronApp.d.ts",
 	"scripts": {
-		"build-example": "chcp 65001 && cd examples && pnpm dev",
-		"build-common": "tsc -p ./src/common/tsconfig.json",
-		"build-main": "tsc -p ./src/main/tsconfig.json",
-		"build": "pnpm build-common && pnpm build-main",
+		"build-example": "chcp 65001 && cd examples && pnpm build",
+		"dev-example": "chcp 65001 && cd examples && pnpm dev",
+		"build": "pnpm tsc -b",
 		"prepack": "pnpm build",
 		"pack:node": "npm pack",
 		"pack:node:dry": "npm pack --dry-run",
@@ -82,11 +81,6 @@
 			"import": "./dist/main/decorators/index.js",
 			"default": "./dist/main/decorators/index.js"
 		},
-		"./main/decorators/renderer": {
-			"types": "./dist/types/main/decorators/renderer/index.d.ts",
-			"import": "./dist/main/decorators/renderer/index.js",
-			"default": "./dist/main/decorators/renderer/index.js"
-		},
 		"./main/services": {
 			"types": "./dist/types/main/services/index.d.ts",
 			"import": "./dist/main/services/index.js",
@@ -96,6 +90,16 @@
 			"types": "./dist/types/main/*.d.ts",
 			"import": "./dist/main/*.js",
 			"default": "./dist/main/*.js"
+		},
+		"./renderer/decorators": {
+			"types": "./dist/types/renderer/decorators/index.d.ts",
+			"import": "./dist/renderer/decorators/index.js",
+			"default": "./dist/renderer/decorators/index.js"
+		},
+		"./renderer/*": {
+			"types": "./dist/types/renderer/*.d.ts",
+			"import": "./dist/renderer/*.js",
+			"default": "./dist/renderer/*.js"
 		}
 	},
 	"typesVersions": {
@@ -126,6 +130,12 @@
 			],
 			"main/*": [
 				"dist/types/main/*"
+			],
+			"renderer/decorators": [
+				"dist/types/renderer/decorators/index.d.ts"
+			],
+			"renderer/*": [
+				"dist/types/renderer/*"
 			]
 		}
 	}
