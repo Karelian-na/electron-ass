@@ -25,7 +25,7 @@ export class WindowManageService extends BWMS implements IWindowManageService {
 				{
 					webPreferences: {
 						preload: path.resolve(__dirname, "preload.js"),
-						nodeIntegration: true,
+						nodeIntegration: false,
 					},
 					width: 480 * dpi,
 					height: 360 * dpi,
@@ -71,7 +71,6 @@ export class WindowManageService extends BWMS implements IWindowManageService {
 		return this.createWindow(url, {
 			webPreferences: {
 				preload: this._getLocalPathFromOutputDir("preload.js"),
-				nodeIntegration: true,
 			},
 		});
 	}
