@@ -22,8 +22,8 @@ export interface IChannelHandlerMetadata {
 
 /**
  * Mark a class as a channel handler provider.
- * 
- * When a class is decorated with this, it will automatically register its methods which decorated with 
+ *
+ * When a class is decorated with this, it will automatically register its methods which decorated with
  * {@link ListenChannel} or {@link HandleChannel}.as a ipc handler after the class is instantiated.
  *
  * @author Karelian_na
@@ -192,7 +192,7 @@ export function applyAutoTransferChannelListenerDecorator(
 	// an invoker
 	if (invoker instanceof Function && !Object.hasOwn(invoker, propertyKey)) {
 		targetInvoker = invoker;
-		targetInvoker.toString = () => invoker.name ? invoker.name : "[Function]";
+		targetInvoker.toString = () => (invoker.name ? invoker.name : "[Function]");
 	}
 	// an object that has method which named `propertyKey`
 	else {
@@ -207,7 +207,7 @@ export function applyAutoTransferChannelListenerDecorator(
 		};
 		if (invoker instanceof Function) {
 			targetInvoker.toString = () => `${invoker.name}.${String(propertyKey)}`;
-		} else if (invoker.constructor === Object){
+		} else if (invoker.constructor === Object) {
 			targetInvoker.toString = () => `[Object].${String(propertyKey)}`;
 		} else {
 			targetInvoker.toString = () => `${invoker.constructor.name}.${String(propertyKey)}`;
@@ -256,10 +256,10 @@ export function applyAutoTransferChannelListenerDecorator(
  * {@link @ChannelHandlerProvider("domain")}
  * class TestService {
  * 	{@link @AutoTransferListenChannel(Test)}
- * 	declare method1: (typeof Test)["testStaticMethod"];
+ * 	declare testStaticMethod: (typeof Test)["testStaticMethod"];
  *
  * 	{@link @AutoTransferListenChannel(testValue.testMethod.bind(testValue))}
- * 	declare method2: Test["testMethod"];
+ * 	declare testMethod: Test["testMethod"];
  * }
  *
  * ```
@@ -301,10 +301,10 @@ export function AutoTransferListenChannel(invokerOrTarget: Function | Object, ch
  * {@link @ChannelHandlerProvider("domain")}
  * class TestService {
  * 	{@link @AutoTransferHandleChannel(Test)}
- * 	declare method1: (typeof Test)["testStaticMethod"];
+ * 	declare testStaticMethod: (typeof Test)["testStaticMethod"];
  *
  * 	{@link @AutoTransferHandleChannel(testValue.testMethod.bind(testValue))}
- * 	declare method2: Test["testMethod"];
+ * 	declare testMethod: Test["testMethod"];
  * }
  *
  * ```
