@@ -1,6 +1,6 @@
 {
 	"name": "electron-ass",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"description": "A TypeScript decorator and service-injection helper library for Electron main process, preload APIs, and IPC channel wiring.",
 	"license": "MIT",
 	"type": "module",
